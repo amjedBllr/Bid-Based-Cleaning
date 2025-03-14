@@ -1,0 +1,29 @@
+Scenario Summary:
+
+1. PolluterAgent :
+   - Pollutes a random cell every 5 seconds.
+   - Sends a CFP (Call For Proposal) message to all CleanerAgents.
+
+2. CleanerAgent :
+   - Receives the CFP message.
+   - Responds with a PROPOSE message containing:
+     - Move cost (cost per unit distance).
+     - Current position (x, y).
+     - Charge (available resources).
+
+3. PolluterAgent :
+   - Receives PROPOSE messages from all CleanerAgents.
+   - For each CleanerAgent:
+     - Calculates the Euclidean distance to the polluted cell.
+     - Computes the total cost as: moveCost * distance.
+     - Determines the bid value:
+       - If charge >= totalCost, bid = totalCost.
+       - Else, bid = Integer.MAX_VALUE (disqualify).
+   - Selects the CleanerAgent with the lowest bid.
+   - Sends an ACCEPT_PROPOSAL message to the selected CleanerAgent.
+
+4. CleanerAgent :
+   - Receives the ACCEPT_PROPOSAL message.
+   - Cleans the assigned polluted cell.
+   - Reassign its attributes (position, charge).
+   - Logs the cleaning action.
